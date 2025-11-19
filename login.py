@@ -26,6 +26,4 @@ botao = tk.Button(janela, text="Entrar",command=log).pack(padx=10)#botao que exe
    
 
 janela.mainloop()
-it works!
-good!
-so, what will we do now?
+#achei maneiro esse metodo
