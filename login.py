@@ -20,7 +20,6 @@ conexao = mysql.connector.connect(host='localhost',database='login',user='root',
 
 cursor = conexao.cursor()#o objeto que usamos para mexer no mysql pelo pyhon
 
-
 janela = tk.Tk() #definindo o nome da tela
 icon = PhotoImage(file="logoPy.png") #definindo uma imagem como icone
 janela.iconphoto(False, icon) #definindo icon como icone da janela
@@ -41,8 +40,42 @@ senha.pack(pady=10)
 def log():
     e1 = nome.get()#passando o valor do label para uma varialvel par dar print no nome
     e2 =senha.get()#passando o valor do label para uma varialvel par dar print na senha 
-    if(e1 == 'carro' and e2 == '123'): 
-        cursor.execute("select * from log")#comando para o banco
+    query = "select nome from log where nome = '"+e1+"'"
+    query2 = "select senha from log where nome = '"+e1+"'"
+    cursor.execute(query, e1)
+    test = cursor.fetchone()
+    cursor.execute(query2, e1)
+    test2 = cursor.fetchone()
+    user = ''.join(str(test))
+    update_user = user.replace("(", "")
+    update_user = update_user.replace(")", "")
+    update_user = update_user.replace("]", "")
+    update_user = update_user.replace("[", "")
+    update_user = update_user.replace("'", "")
+    update_user = update_user.replace(",", "")
+    senha1 = ''.join(str(test2))
+    update_senha = senha1.replace("(", "")
+    update_senha = update_senha.replace(")", "")
+    update_senha = update_senha.replace("]", "")
+    update_senha = update_senha.replace("[", "")
+    update_senha = update_senha.replace("'", "")
+    update_senha = update_senha.replace(",", "")
+    
+    print(update_senha)
+    
+    if(e1 == update_user and e2 == update_senha): 
+        tk.Label(janela,text="Login efetuado com sucesso").pack(padx=10)
+    else:
+        tk.Label(janela,text="nome/senha estao incorretos").pack(padx=10)#mostra quando os dados do usuarios estão incorretos
+        
+        
+        
+       
+botao = tk.Button(janela, text="Entrar",command=log).pack(padx=10)#botao que executa a ação
+
+janela.mainloop()
+'''
+ cursor.execute("select * from log")#comando para o banco
         dados = cursor.fetchall()#pega todas os dados do banco
         jsecundaria = tk.Tk()#definindo a janela 
         
@@ -51,6 +84,4 @@ def log():
         tk.Label(jsecundaria,text=dados+"\n").pack() 
     else:
         tk.Label(janela,text="nome/senha estao incorretos").pack(padx=10)#mostra quando os dados do usuarios estão incorretos
-botao = tk.Button(janela, text="Entrar",command=log).pack(padx=10)#botao que executa a ação
-
-janela.mainloop()
+'''
