@@ -46,7 +46,7 @@ def log():
     userNome = str(cursor.fetchone()).replace("(", "").replace(")", "").replace("]", "").replace("[", "").replace("'", "").replace(",", "")
     cursor.execute(query2, e1)
     userSenha = str(cursor.fetchone()).replace("(", "").replace("(", "").replace(")", "").replace("]", "").replace("[", "").replace("'", "").replace(",", "")
-     if(e1 == ""and e2 == ""):
+    if(e1 == ""and e2 == ""):
      messagebox.showerror("Erro",'Digite os valores')
     
     if(e1 == userNome and e2 == userSenha): 
