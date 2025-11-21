@@ -43,27 +43,10 @@ def log():
     query = "select nome from log where nome = '"+e1+"'"
     query2 = "select senha from log where nome = '"+e1+"'"
     cursor.execute(query, e1)
-    test = cursor.fetchone()
+    userNome = str(cursor.fetchone()).replace("(", "").replace(")", "").replace("]", "").replace("[", "").replace("'", "").replace(",", "")
     cursor.execute(query2, e1)
-    test2 = cursor.fetchone()
-    user = ''.join(str(test))
-    update_user = user.replace("(", "")
-    update_user = update_user.replace(")", "")
-    update_user = update_user.replace("]", "")
-    update_user = update_user.replace("[", "")
-    update_user = update_user.replace("'", "")
-    update_user = update_user.replace(",", "")
-    senha1 = ''.join(str(test2))
-    update_senha = senha1.replace("(", "")
-    update_senha = update_senha.replace(")", "")
-    update_senha = update_senha.replace("]", "")
-    update_senha = update_senha.replace("[", "")
-    update_senha = update_senha.replace("'", "")
-    update_senha = update_senha.replace(",", "")
-    
-    print(update_senha)
-    
-    if(e1 == update_user and e2 == update_senha): 
+    userSenha = str(cursor.fetchone()).replace("(", "").replace("(", "").replace(")", "").replace("]", "").replace("[", "").replace("'", "").replace(",", "")
+    if(e1 == userNome and e2 == userSenha): 
         tk.Label(janela,text="Login efetuado com sucesso").pack(padx=10)
     else:
         tk.Label(janela,text="nome/senha estao incorretos").pack(padx=10)#mostra quando os dados do usuarios estão incorretos
