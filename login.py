@@ -1,6 +1,6 @@
 import string
 import tkinter as tk #importando a tela
-from tkinter import messagebox, LabelFrame, PhotoImage#são as funções que estou puxando da biblioteca do tkinter
+from tkinter import messagebox, LabelFrame, PhotoImage,ttk#são as funções que estou puxando da biblioteca do tkinter
 import mysql.connector
 """
 Login: usuario senha: 1234
@@ -40,6 +40,20 @@ senha = tk.Entry(janela, show="*")# campo de texto onde iremos digitar a senha
 senha.place(height=20,width=150,y=70,x=100)
 
 
+def select():
+    jLista = tk.Toplevel()#uma segunda tela
+    jLista.title("Lista")#nome da tela
+    jLista.geometry("400x250")#tamanho
+    cursor.execute("select nome,preco from cardapio")#Cogido do sql 
+    card = cursor.fetchall()#puxando dos os dados fornecidos pelo mysql
+    selec = ttk.Treeview(jLista,columns=("Nome","Preco"),show="headings")#criando uma treeview e definindo o nome das colunas
+    selec.column("Nome",width=100,minwidth=50)#definindo o tamanho da coluna
+    selec.column("Preco",width=100,minwidth=50)#definindo o tamanho da coluna
+    selec.heading("Nome",text="Nome:")#definindo qual o texto que ira aparecer na coluna
+    selec.heading("Preco",text="Preço:")#definindo qual o texto que ira aparecer na coluna
+    selec.pack()#terminando a treeview
+    for(n,p) in card:
+        selec.insert("","end",values=(n,p))
 def log():
     e1 = nome.get()#passando o valor do label para uma varialvel par dar print no nome
     e2 =senha.get()#passando o valor do label para uma varialvel par dar print na senha 
@@ -61,19 +75,18 @@ def log():
         jsecundaria.config(bg="#b5b5b5")
         jsecundaria.geometry("400x250")#tamanho da janela
         jsecundaria.resizable(0,0)#não permite que a janela seja maximizada
-        tk.Label(jsecundaria,text='ID:',bg="#b5b5b5").place(x=10,y=10,)#X e de um lado pro outro e y cima e baixo
-        tk.Label(jsecundaria,text='Nome:',bg="#b5b5b5").place(x=9,y=45)#X e de um lado pro outro e y cima e baixo
-        tk.Label(jsecundaria,text='Preço:',bg="#b5b5b5").place(x=9,y=80)#X e de um lado pro outro e y cima e baixo
+        tk.Label(jsecundaria,text='Nome:',bg="#b5b5b5").place(x=9,y=10)#X e de um lado pro outro e y cima e baixo
+        tk.Label(jsecundaria,text='Preço:',bg="#b5b5b5").place(x=9,y=40)#X e de um lado pro outro e y cima e baixo
 
-        id=tk.Entry(jsecundaria)
+        
         nome2=tk.Entry(jsecundaria)
         preco=tk.Entry(jsecundaria)
-        preco.place(width=150,x=50,y=80)
-        nome2.place(width=150,x=50,y=45)
-        id.place(width=150,x=35,y=10)
+        preco.place(width=150,x=50,y=41)
+        nome2.place(width=150,x=50,y=13)
 
 
-        tk.Button(jsecundaria,text='select').place(x=10,y=130)#botao de select
+
+        tk.Button(jsecundaria,text='select',command=select).place(x=10,y=130)#botao de select
         tk.Button(jsecundaria,text='update').place(x=60,y=130)#botao de update 
         tk.Button(jsecundaria,text='insert').place(x=120,y=130)#botao de insert
         tk.Button(jsecundaria,text='delet').place(x=170,y=130)#botao de delet
