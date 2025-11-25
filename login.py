@@ -22,14 +22,14 @@ conexao = mysql.connector.connect(host='localhost',database='login',user='root',
 cursor = conexao.cursor()#o objeto que usamos para mexer no mysql pelo pyhon
 
 janela = tk.Tk() #definindo o nome da tela
-icon = PhotoImage(file="logoPy.png") #definindo uma imagem como icone
-janela.iconphoto(False, icon) #definindo icon como icone da janela
+
+
 janela.title("Login")#nome da janela
 janela.resizable(0,0)#desabilita a função de maximizar a tela de login
 janela.geometry('400x300') #definido o tamanho da tela 
 
 
-
+global userNome
 tk.Label(janela, text="Usuário").place(x=50,y=20) #Onde ira aparecer uma mensagem
 
 nome = tk.Entry(janela)
@@ -64,6 +64,14 @@ def log():
     userNome = str(cursor.fetchone()).replace("(", "").replace(")", "").replace("]", "").replace("[", "").replace("'", "").replace(",", "")#ele subistitui os caracteres por caracteres vazios e o str trasforma o cursor.fetchone() em string pois ele vem como truple
     cursor.execute(query2, e1)#usa o cursor para executar o comando e a variavel mais o e2 que e == senha.get()
     userSenha = str(cursor.fetchone()).replace("(", "").replace("(", "").replace(")", "").replace("]", "").replace("[", "").replace("'", "").replace(",", "")#ele subistitui os caracteres por caracteres vazios e o str trasforma o cursor.fetchone() em string pois ele vem como truple 
+    def produto():
+        Produto = str(cursor.fetchall()).replace("(", "").replace(")", "").replace("]", "").replace("[", "").replace("'", "").replace(",", "")#ele subistitui os caracteres por caracteres vazios e o str trasforma o cursor.fetchone() em string pois ele vem como truple
+        cursor.execute("select * from cardapio where id=1")
+        cursor.fetchall()
+        
+    
+    
+    
     if(e1 == ""and e2 == ""):
      messagebox.showerror("Erro",'Digite os valores')#messagebox importado par quando os dados estiverm em branco
 
@@ -85,13 +93,15 @@ def log():
         nome2.place(width=150,x=50,y=13)
 
 
-
-        tk.Button(jsecundaria,text='select',command=select).place(x=10,y=130)#botao de select
+        tk.Button(jsecundaria,text="Procurar produto",command=produto).place(x=250,y=10)
+        tk.Button(jsecundaria,text='select',command=log).place(x=10,y=130)#botao de select
         tk.Button(jsecundaria,text='update').place(x=60,y=130)#botao de update 
         tk.Button(jsecundaria,text='insert').place(x=120,y=130)#botao de insert
         tk.Button(jsecundaria,text='delet').place(x=170,y=130)#botao de delet
     else:
         tk.Label(janela,text="nome/senha estao incorretos").place(x=100,y=200)#mostra quando os dados do usuarios estão incorretos
+    
+
         
 botao = tk.Button(janela, text="Entrar",command=log).place(height=50,width=100,y=100,x=50)#botao que executa a ação
 janela.bind('<Return>',lambda event:log())#Return e no nome do enter no teclado lambda event manda a função pedida
