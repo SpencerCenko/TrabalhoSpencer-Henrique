@@ -40,6 +40,22 @@ senha = tk.Entry(janela, show="*")# campo de texto onde iremos digitar a senha
 senha.place(height=20,width=150,y=70,x=100)
 
 
+def delete(nome2):
+    try:
+        cursor.execute("delete from cardapio where nome = '"+nome2.get()+"'")
+        conexao.commit()
+    except:
+        print('erro ao apagar produto')
+    else:
+        print('produto apagado com sucesso')
+def insert(nome2, preco):
+    try:
+        cursor.execute("insert into cardapio (nome, preco) values ('"+nome2.get()+"', "+preco.get()+")")
+        conexao.commit()
+    except:
+        print('Erro ao cadastrar produto')
+    else:
+        print('Produto cadastrado com sucesso')
 def select():
     jLista = tk.Toplevel()#uma segunda tela
     jLista.title("Lista")#nome da tela
@@ -68,7 +84,8 @@ def log():
         Produto = str(cursor.fetchall()).replace("(", "").replace(")", "").replace("]", "").replace("[", "").replace("'", "").replace(",", "")#ele subistitui os caracteres por caracteres vazios e o str trasforma o cursor.fetchone() em string pois ele vem como truple
         cursor.execute("select * from cardapio where id=1")
         cursor.fetchall()
-        
+
+
     
     
     
@@ -91,13 +108,11 @@ def log():
         preco=tk.Entry(jsecundaria)
         preco.place(width=150,x=50,y=41)
         nome2.place(width=150,x=50,y=13)
-
-
         tk.Button(jsecundaria,text="Procurar produto",command=produto).place(x=250,y=10)
         tk.Button(jsecundaria,text='select',command=log).place(x=10,y=130)#botao de select
         tk.Button(jsecundaria,text='update').place(x=60,y=130)#botao de update 
-        tk.Button(jsecundaria,text='insert').place(x=120,y=130)#botao de insert
-        tk.Button(jsecundaria,text='delet').place(x=170,y=130)#botao de delet
+        tk.Button(jsecundaria,text='insert', command=lambda: insert(nome2, preco)).place(x=120,y=130)#botao de insert
+        tk.Button(jsecundaria,text='delete',command=lambda: delete(nome2)).place(x=170,y=130)#botao de delet
     else:
         tk.Label(janela,text="nome/senha estao incorretos").place(x=100,y=200)#mostra quando os dados do usuarios estão incorretos
     
