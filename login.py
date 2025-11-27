@@ -29,7 +29,7 @@ janela.resizable(0,0)#desabilita a função de maximizar a tela de login
 janela.geometry('400x300') #definido o tamanho da tela 
 
 
-global userNome
+
 tk.Label(janela, text="Usuário").place(x=50,y=20) #Onde ira aparecer uma mensagem
 
 nome = tk.Entry(janela)
@@ -70,6 +70,7 @@ def select():
     selec.pack()#terminando a treeview
     for(n,p) in card:
         selec.insert("","end",values=(n,p))
+    
 def log():
     e1 = nome.get()#passando o valor do label para uma varialvel par dar print no nome
     e2 =senha.get()#passando o valor do label para uma varialvel par dar print na senha 
@@ -81,14 +82,16 @@ def log():
     cursor.execute(query2, e1)#usa o cursor para executar o comando e a variavel mais o e2 que e == senha.get()
     userSenha = str(cursor.fetchone()).replace("(", "").replace("(", "").replace(")", "").replace("]", "").replace("[", "").replace("'", "").replace(",", "")#ele subistitui os caracteres por caracteres vazios e o str trasforma o cursor.fetchone() em string pois ele vem como truple 
     def produto():
-        Produto = str(cursor.fetchall()).replace("(", "").replace(")", "").replace("]", "").replace("[", "").replace("'", "").replace(",", "")#ele subistitui os caracteres por caracteres vazios e o str trasforma o cursor.fetchone() em string pois ele vem como truple
-        cursor.execute("select * from cardapio where id=1")
-        cursor.fetchall()
-
-
-    
-    
-    
+        try:
+            seleco ="select nome,preco from cardapio where nome = '"+nome2.get()+"'"
+            cursor.execute(seleco,nome2.get())
+            Produto = str(cursor.fetchall()).replace("(", "").replace(")", "").replace("]", "").replace("[", "").replace("'", "").replace(",", "")#ele subistitui os caracteres por caracteres vazios e o str trasforma o cursor.fetchone() em string pois ele vem como truple
+            Produto, Preco = Produto.split()
+            preco.insert(0,Preco)
+        except:
+            print('deu errado')
+        else:
+            print('deu certo')
     if(e1 == ""and e2 == ""):
      messagebox.showerror("Erro",'Digite os valores')#messagebox importado par quando os dados estiverm em branco
 
@@ -109,7 +112,7 @@ def log():
         preco.place(width=150,x=50,y=41)
         nome2.place(width=150,x=50,y=13)
         tk.Button(jsecundaria,text="Procurar produto",command=produto).place(x=250,y=10)
-        tk.Button(jsecundaria,text='select',command=log).place(x=10,y=130)#botao de select
+        tk.Button(jsecundaria,text='select',command=produto).place(x=10,y=130)#botao de select
         tk.Button(jsecundaria,text='update').place(x=60,y=130)#botao de update 
         tk.Button(jsecundaria,text='insert', command=lambda: insert(nome2, preco)).place(x=120,y=130)#botao de insert
         tk.Button(jsecundaria,text='delete',command=lambda: delete(nome2)).place(x=170,y=130)#botao de delet
