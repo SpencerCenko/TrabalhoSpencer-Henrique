@@ -27,9 +27,9 @@ janela = tk.Tk() #definindo o nome da tela
 janela.title("Login")#nome da janela
 janela.resizable(0,0)#desabilita a função de maximizar a tela de login
 janela.geometry('400x300') #definido o tamanho da tela 
-
-
-
+# Carregar a imagem no formato suportado (PNG, GIF, etc.)
+icone = PhotoImage(file="logoPy.png")
+janela.iconphoto(False, icone)
 tk.Label(janela, text="Usuário").place(x=50,y=20) #Onde ira aparecer uma mensagem
 
 nome = tk.Entry(janela)
@@ -70,7 +70,27 @@ def select():
     selec.pack()#terminando a treeview
     for(n,p) in card:
         selec.insert("","end",values=(n,p))
-    
+def prato(nome2, preco,id):
+    try:
+        seleco ="select nome,preco from cardapio where id = "+id.get()+""
+        cursor.execute(seleco,id.get())
+        Produto = str(cursor.fetchall()).replace("(", "").replace(")", "").replace("]", "").replace("[", "").replace("'", "").replace(",", "")#ele subistitui os caracteres por caracteres vazios e o str trasforma o cursor.fetchone() em string pois ele vem como truple
+        Produto, Preco = Produto.split()#<-- arumar probelma com dados com
+        nome2.insert(0,Produto)
+        preco.insert(0,Preco)
+    except:
+        print('deu errado')
+    else:
+        print('deu certo')
+def upd(nome2,preco,id):
+    try:
+        upd =  cursor.execute("update cardapio set nome='"+nome2.get()+"',preco='"+preco.get()+"'where id = "+id.get()+"")
+        cursor.execute(upd,nome2.get(),preco.get())
+        conexao.commit()
+    except:
+        print("Errado")
+    else:
+        print("Certo")
 def log():
     e1 = nome.get()#passando o valor do label para uma varialvel par dar print no nome
     e2 =senha.get()#passando o valor do label para uma varialvel par dar print na senha 
@@ -81,17 +101,7 @@ def log():
     userNome = str(cursor.fetchone()).replace("(", "").replace(")", "").replace("]", "").replace("[", "").replace("'", "").replace(",", "")#ele subistitui os caracteres por caracteres vazios e o str trasforma o cursor.fetchone() em string pois ele vem como truple
     cursor.execute(query2, e1)#usa o cursor para executar o comando e a variavel mais o e2 que e == senha.get()
     userSenha = str(cursor.fetchone()).replace("(", "").replace("(", "").replace(")", "").replace("]", "").replace("[", "").replace("'", "").replace(",", "")#ele subistitui os caracteres por caracteres vazios e o str trasforma o cursor.fetchone() em string pois ele vem como truple 
-    def produto():
-        try:
-            seleco ="select nome,preco from cardapio where nome = '"+nome2.get()+"'"
-            cursor.execute(seleco,nome2.get())
-            Produto = str(cursor.fetchall()).replace("(", "").replace(")", "").replace("]", "").replace("[", "").replace("'", "").replace(",", "")#ele subistitui os caracteres por caracteres vazios e o str trasforma o cursor.fetchone() em string pois ele vem como truple
-            Produto, Preco = Produto.split()
-            preco.insert(0,Preco)
-        except:
-            print('deu errado')
-        else:
-            print('deu certo')
+
     if(e1 == ""and e2 == ""):
      messagebox.showerror("Erro",'Digite os valores')#messagebox importado par quando os dados estiverm em branco
 
@@ -103,24 +113,22 @@ def log():
         jsecundaria.config(bg="#b5b5b5")
         jsecundaria.geometry("400x250")#tamanho da janela
         jsecundaria.resizable(0,0)#não permite que a janela seja maximizada
-        tk.Label(jsecundaria,text='Nome:',bg="#b5b5b5").place(x=9,y=10)#X e de um lado pro outro e y cima e baixo
-        tk.Label(jsecundaria,text='Preço:',bg="#b5b5b5").place(x=9,y=40)#X e de um lado pro outro e y cima e baixo
-
-        
+        tk.Label(jsecundaria,text='Nome:',bg="#b5b5b5").place(x=9,y=41)#X e de um lado pro outro e y cima e baixo
+        tk.Label(jsecundaria,text='Preço:',bg="#b5b5b5").place(x=9,y=80)#X e de um lado pro outro e y cima e baixo
+        tk.Label(jsecundaria,text='ID:',bg="#b5b5b5").place(x=9,y=13)
+        id = tk.Entry(jsecundaria)
         nome2=tk.Entry(jsecundaria)
         preco=tk.Entry(jsecundaria)
-        preco.place(width=150,x=50,y=41)
-        nome2.place(width=150,x=50,y=13)
-        tk.Button(jsecundaria,text="Procurar produto",command=produto).place(x=250,y=10)
-        tk.Button(jsecundaria,text='select',command=produto).place(x=10,y=130)#botao de select
-        tk.Button(jsecundaria,text='update').place(x=60,y=130)#botao de update 
+        id.place(width=50,x=50,y=13)
+        preco.place(width=150,x=50,y=80)
+        nome2.place(width=150,x=50,y=41)
+        tk.Button(jsecundaria,text="Procurar produto",command=lambda:prato(nome2,preco,id)).place(x=250,y=10)
+        tk.Button(jsecundaria,text='select',command=lambda:select()).place(x=10,y=130)#botao de select
+        tk.Button(jsecundaria,text='update', command=lambda: upd(nome2, preco,id)).place(x=60,y=130)#botao de update 
         tk.Button(jsecundaria,text='insert', command=lambda: insert(nome2, preco)).place(x=120,y=130)#botao de insert
         tk.Button(jsecundaria,text='delete',command=lambda: delete(nome2)).place(x=170,y=130)#botao de delet
     else:
         tk.Label(janela,text="nome/senha estao incorretos").place(x=100,y=200)#mostra quando os dados do usuarios estão incorretos
-    
-
-        
 botao = tk.Button(janela, text="Entrar",command=log).place(height=50,width=100,y=100,x=50)#botao que executa a ação
 janela.bind('<Return>',lambda event:log())#Return e no nome do enter no teclado lambda event manda a função pedida
 
