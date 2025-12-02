@@ -28,8 +28,6 @@ janela.title("Login")#nome da janela
 janela.resizable(0,0)#desabilita a função de maximizar a tela de login
 janela.geometry('400x300') #definido o tamanho da tela 
 # Carregar a imagem no formato suportado (PNG, GIF, etc.)
-icone = PhotoImage(file="logoPy.png")
-janela.iconphoto(False, icone)
 tk.Label(janela, text="Usuário").place(x=50,y=20) #Onde ira aparecer uma mensagem
 
 nome = tk.Entry(janela)
@@ -71,17 +69,16 @@ def select():
     for(n,p) in card:
         selec.insert("","end",values=(n,p))
 def prato(nome2, preco,id):
-    try:
+        nome2.delete(0, tk.END) #resetando nome2
+        preco.delete(0, tk.END) #resetando preco
         seleco ="select nome,preco from cardapio where id = "+id.get()+""
         cursor.execute(seleco,id.get())
-        Produto = str(cursor.fetchall()).replace("(", "").replace(")", "").replace("]", "").replace("[", "").replace("'", "").replace(",", "")#ele subistitui os caracteres por caracteres vazios e o str trasforma o cursor.fetchone() em string pois ele vem como truple
-        Produto, Preco = Produto.split()#<-- arumar probelma com dados com
-        nome2.insert(0,Produto)
-        preco.insert(0,Preco)
-    except:
-        print('deu errado')
-    else:
-        print('deu certo')
+        Produto = str(cursor.fetchall()).replace("(", "", 1).replace("]", "").replace("[", "").replace("'", "")#ele subistitui os caracteres por caracteres vazios e o str trasforma o cursor.fetchone() em string pois ele vem como truple
+        Produto, Preco = Produto.split(",", 2) #aqui to pedindo pro python separar produto em 2 variaveis a partir da ","
+        Preco = Preco.replace(" ", "").replace(")", "", 1) #aqui so to dando uns replace pq fica um espaço e um parenteses q eu n quero q fiquem la
+        nome2.insert(0, Produto) #inserindo Produto em nome2
+        preco.insert(0, Preco) #inserindo Preco em preco
+
 def upd(nome2,preco,id):
     try:
         upd =  cursor.execute("update cardapio set nome='"+nome2.get()+"',preco='"+preco.get()+"'where id = "+id.get()+"")
