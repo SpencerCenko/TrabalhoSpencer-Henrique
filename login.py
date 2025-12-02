@@ -80,14 +80,15 @@ def prato(nome2, preco,id):
         preco.insert(0, Preco) #inserindo Preco em preco
 
 def upd(nome2,preco,id):
-    try:
-        upd =  cursor.execute("update cardapio set nome='"+nome2.get()+"',preco='"+preco.get()+"'where id = "+id.get()+"")
-        cursor.execute(upd,nome2.get(),preco.get())
-        conexao.commit()
-    except:
-        print("Errado")
-    else:
-        print("Certo")
+    upd =  cursor.execute("update cardapio set nome='"+nome2.get()+"',preco='"+preco.get()+"'where id = "+id.get()+"")
+    cursor.execute(upd,nome2.get(),preco.get())
+    conexao.commit()
+    querry = "select id from cardapio where id ="+id.get()
+    cursor.execute(querry)
+    idb = cursor.fetchone()
+    if  idb == None:
+        messagebox.showerror("Erro", 'Id inexistente no banco de dados, sugiro que de um insert')#messagebox importado par quando os dados estiverm em branco
+
 def log():
     e1 = nome.get()#passando o valor do label para uma varialvel par dar print no nome
     e2 =senha.get()#passando o valor do label para uma varialvel par dar print na senha 
