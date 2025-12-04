@@ -26,10 +26,9 @@ janela = tk.Tk() #definindo o nome da tela
 
 janela.title("Login")#nome da janela
 janela.resizable(0,0)#desabilita a função de maximizar a tela de login
-janela.geometry('400x300') #definido o tamanho da tela 
+janela.geometry("400x300") #definido o tamanho da tela 
 # Carregar a imagem no formato suportado (PNG, GIF, etc.)
 tk.Label(janela, text="Usuário").place(x=50,y=20) #Onde ira aparecer uma mensagem
-
 nome = tk.Entry(janela)
 nome.place(height=20,width=150,x=100,y=20)# campo de texto onde iremos digitar o nome
 
@@ -37,6 +36,27 @@ tk.Label(janela, text="Senha").place(x=50,y=70)#Onde ira aparecer uma mensagem
 senha = tk.Entry(janela, show="*")# campo de texto onde iremos digitar a senha
 senha.place(height=20,width=150,y=70,x=100)
 
+
+
+cardapiob = tk.Button(janela, text="Cardapio", command=lambda: cardapio()).place(x=100, y=170)
+
+
+def cardapio():
+    janela.destroy()
+    jlistaa = tk.Tk()
+    jlistaa.title("Lista")
+    jlistaa.geometry("400x300")
+    cursor.execute('select nome, preco from cardapio')
+    card = cursor.fetchall()
+    select = ttk.Treeview(jlistaa, columns=("Nome", "Preco"), show="headings")
+    select.column("Nome", width=200, minwidth=50)
+    select.column("Preco", width=200, minwidth=50)
+    select.heading("Nome",text="Nome:")
+    select.heading("Preco",text="Preço:")
+    select.pack()
+    for (n, p) in card:
+        select.insert("", "end", values=(n, p))
+    
 
 def delete(nome2):
     try:
